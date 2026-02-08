@@ -44,7 +44,6 @@ def test_silhouette_invalid_shapes():
     X = np.random.rand(5, 2)
     y = np.array([0, 1, 2, 0, 1, 2])
     with pytest.raises(Exception):
-        # different number of rows and labels-should error (probably IndexError or ValueError)
         sil.score(X, y[:4])
 
 def test_silhouette_negative_score():
