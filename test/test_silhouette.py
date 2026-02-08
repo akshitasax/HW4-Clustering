@@ -44,7 +44,7 @@ def test_silhouette_invalid_shapes():
     X = np.random.rand(5, 2)
     y = np.array([0, 1, 2, 0, 1, 2])
     with pytest.raises(Exception):
-        # Different number of rows and labels -- should error (probably IndexError or ValueError)
+        # different number of rows and labels-should error (probably IndexError or ValueError)
         sil.score(X, y[:4])
 
 def test_silhouette_negative_score():
@@ -60,18 +60,17 @@ def test_silhouette_negative_score():
     assert np.any(scores < 0)
     assert np.all(scores >= -1) and np.all(scores <= 1)
 
-    def test_silhouette_compare_sklearn():
-        # Random but clearly separable clusters
-        X = np.vstack([
-            np.random.normal([0, 0], 0.2, size=(25, 2)),
-            np.random.normal([5, 5], 0.2, size=(25, 2))
-        ])
-        y = np.array([0]*25 + [1]*25)
-        sil = Silhouette()
-        my_scores = sil.score(X, y)
-        # sklearn returns a mean silhouette score
-        skl_score = skl_silhouette_score(X, y)
-        # Our Silhouette class returns scores for each sample
-        my_mean_score = np.mean(my_scores)
-        # Check that the average silhouette score matches scikit-learn within a small tolerance
-        assert np.allclose(my_mean_score, skl_score, atol=1e-2)
+def test_silhouette_compare_sklearn():
+    # Random but clearly separable clusters
+    X1 = np.random.normal([0, 0], 0.2, size=(25, 2))
+    X2 = np.random.normal([5, 5], 0.2, size=(25, 2))
+    X = np.concatenate((X1, X2), axis=0)
+    y = np.array([0]*25 + [1]*25)
+    sil = Silhouette()
+    my_scores = sil.score(X, y)
+    # sklearn returns a mean silhouette score
+    skl_score = skl_silhouette_score(X, y)
+    # Silhouette class returns scores for each sample
+    my_mean_score = np.mean(my_scores)
+    # Check that the average silhouette score matches scikit-learn within a small tolerance
+    assert np.allclose(my_mean_score, skl_score, atol=1e-2)
